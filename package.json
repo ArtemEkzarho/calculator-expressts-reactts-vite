@@ -7,7 +7,7 @@
     "start": "node dist/index.js",
     "dev": "ts-node server/index.ts",
     "dev-watch": "nodemon server/index.ts",
-    "build": "tsc && pnpm run build-client",
+    "build": "pnpm i && tsc && pnpm run build-client",
     "build-client": "pnpm --dir client run build"
   },
   "dependencies": {
