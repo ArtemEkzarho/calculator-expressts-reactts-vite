@@ -1,27 +1,15 @@
 import { useState } from 'react'
-import { evaluate } from 'mathjs'
+import { Button, TextField, Box, Grid } from '@mui/material'
 
-import './styles.css'
+import { evaluate } from 'mathjs'
 
 export const App = () => {
   const [input, setInput] = useState<string>('')
 
-  const handleNumberClick = (number: string) => {
-    setInput(input + number)
-  }
-
-  const handleClear = () => {
-    setInput('')
-  }
-
-  const handleDelete = () => {
-    setInput(input.slice(0, -1))
-  }
-
-  const handleOperator = (operator: string) => {
-    setInput(input + operator)
-  }
-
+  const handleNumberClick = (number: string) => setInput(input + number)
+  const handleClear = () => setInput('')
+  const handleDelete = () => setInput(input.slice(0, -1))
+  const handleOperator = (operator: string) => setInput(input + operator)
   const handleCalculate = () => {
     try {
       const result = evaluate(input)
@@ -30,99 +18,105 @@ export const App = () => {
       setInput('Error')
     }
   }
-
-  const handlePlusMinus = () => {
-    if (input.startsWith('-')) {
-      setInput(input.slice(1))
-    } else {
-      setInput('-' + input)
-    }
-  }
-
-  const handleDot = () => {
-    if (!input.includes('.')) {
-      setInput(input + '.')
-    }
-  }
+  const handlePlusMinus = () => setInput(input.startsWith('-') ? input.slice(1) : '-' + input)
+  const handleDot = () => setInput(input.includes('.') ? input : input + '.')
 
   return (
-    <div className="calculator-wrap">
-      <div className="input-row">
-        <input value={input} disabled />
-      </div>
-      <div className="row-btns">
-        <button
-          className="clear-current-field-btn"
-          onClick={() => setInput('')}
-        >
-          ce
-        </button>
-        <button className="clear-btn" onClick={handleClear}>
-          c
-        </button>
-        <button className="dell-btn" onClick={handleDelete}>
-          del
-        </button>
-        <button className="action-btn" onClick={() => handleOperator('/')}>
-          /
-        </button>
-      </div>
-      <div className="row-btns">
-        <button className="number" onClick={() => handleNumberClick('7')}>
-          7
-        </button>
-        <button className="number" onClick={() => handleNumberClick('8')}>
-          8
-        </button>
-        <button className="number" onClick={() => handleNumberClick('9')}>
-          9
-        </button>
-        <button className="action-btn" onClick={() => handleOperator('*')}>
-          *
-        </button>
-      </div>
-      <div className="row-btns">
-        <button className="number" onClick={() => handleNumberClick('4')}>
-          4
-        </button>
-        <button className="number" onClick={() => handleNumberClick('5')}>
-          5
-        </button>
-        <button className="number" onClick={() => handleNumberClick('6')}>
-          6
-        </button>
-        <button className="action-btn" onClick={() => handleOperator('-')}>
-          -
-        </button>
-      </div>
-      <div className="row-btns">
-        <button className="number" onClick={() => handleNumberClick('1')}>
-          1
-        </button>
-        <button className="number" onClick={() => handleNumberClick('2')}>
-          2
-        </button>
-        <button className="number" onClick={() => handleNumberClick('3')}>
-          3
-        </button>
-        <button className="action-btn" onClick={() => handleOperator('+')}>
-          +
-        </button>
-      </div>
-      <div className="row-btns">
-        <button className="plus-minus-btn" onClick={handlePlusMinus}>
-          +-
-        </button>
-        <button className="number" onClick={() => handleNumberClick('0')}>
-          0
-        </button>
-        <button className="dot-btn" onClick={handleDot}>
-          .
-        </button>
-        <button className="calculate-btn" onClick={handleCalculate}>
-          =
-        </button>
-      </div>
-    </div>
+    <Box sx={{ minWidth: 320, maxWidth: 400, m: 'auto', p: 2 }}>
+      <TextField
+        fullWidth
+        variant="outlined"
+        value={input}
+        InputProps={{ readOnly: true }}
+        inputProps={{ style: { textAlign: 'right' } }}
+        sx={{ mb: 2, backgroundColor: 'background.paper' }}
+      />
+      <Grid container spacing={1}>
+        <Grid item xs={3}>
+          <Button fullWidth variant="outlined" onClick={() => setInput('')}>
+            ce
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button fullWidth variant="outlined" onClick={handleClear}>
+            c
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button fullWidth variant="outlined" onClick={handleDelete}>
+            del
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button fullWidth variant="outlined" onClick={() => handleOperator('/')}>
+            /
+          </Button>
+        </Grid>
+
+        {/* Row for 7, 8, 9, * */}
+        {['7', '8', '9'].map((number) => (
+          <Grid item xs={3} key={number}>
+            <Button fullWidth variant="contained" onClick={() => handleNumberClick(number)}>
+              {number}
+            </Button>
+          </Grid>
+        ))}
+        <Grid item xs={3}>
+          <Button fullWidth variant="contained" onClick={() => handleOperator('*')}>
+            *
+          </Button>
+        </Grid>
+
+        {/* Row for 4, 5, 6, - */}
+        {['4', '5', '6'].map((number) => (
+          <Grid item xs={3} key={number}>
+            <Button fullWidth variant="contained" onClick={() => handleNumberClick(number)}>
+              {number}
+            </Button>
+          </Grid>
+        ))}
+        <Grid item xs={3}>
+          <Button fullWidth variant="contained" onClick={() => handleOperator('-')}>
+            -
+          </Button>
+        </Grid>
+
+        {/* Row for 1, 2, 3, + */}
+        {['1', '2', '3'].map((number) => (
+          <Grid item xs={3} key={number}>
+            <Button fullWidth variant="contained" onClick={() => handleNumberClick(number)}>
+              {number}
+            </Button>
+          </Grid>
+        ))}
+        <Grid item xs={3}>
+          <Button fullWidth variant="contained" onClick={() => handleOperator('+')}>
+            +
+          </Button>
+        </Grid>
+
+        {/* Row for +-, 0, ., = */}
+        <Grid item xs={3}>
+          <Button fullWidth variant="contained" onClick={handlePlusMinus}>
+            +-
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button fullWidth variant="contained" onClick={() => handleNumberClick('0')}>
+            0
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button fullWidth variant="contained" onClick={handleDot}>
+            .
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          <Button fullWidth variant="contained" onClick={handleCalculate}>
+            =
+          </Button>
+        </Grid>
+      </Grid>
+    </Box>
   )
 }
