@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Box, TextField, Grid } from '@mui/material'
 import CalculatorButton from './CalculatorButton' // Make sure to import or define this component
 
@@ -6,10 +6,6 @@ export const App = () => {
   const [currentInput, setCurrentInput] = useState<string>('')
   const [accumulator, setAccumulator] = useState<number | null>(null)
   const [operation, setOperation] = useState<string | null>(null)
-
-  useEffect(() => {
-    console.log(operation)
-  }, [operation])
 
   const handleNumberClick = (number: string) => {
     setCurrentInput(currentInput === '0' || operation ? number : currentInput + number)
@@ -87,6 +83,9 @@ export const App = () => {
         borderRadius: 2,
       }}
     >
+      <Box>currentInput {currentInput}</Box>
+      <Box>accumulator {accumulator}</Box>
+      <Box>operation {operation}</Box>
       <TextField
         fullWidth
         variant="outlined"
