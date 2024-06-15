@@ -14,7 +14,6 @@ export const BottomToolbar = ({ displayValue, firstOperand, secondOperand, opera
 
   return (
     <>
-      {' '}
       <Grid container justifyContent="space-between" alignItems="center">
         <Grid item>
           <FormControlLabel

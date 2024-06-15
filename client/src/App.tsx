@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Box, TextField, Grid } from '@mui/material'
 
-import CalculatorButton from './CalculatorButton'
-import { BottomToolbar } from './BottomToolbar'
+import CalculatorButton from './components/CalculatorButton'
+import { BottomToolbar } from './components/BottomToolbar'
 
 export const App = () => {
   const [displayValue, setDisplayValue] = useState<string>('0')
@@ -12,22 +12,25 @@ export const App = () => {
   const [firstOperandSet, setFirstOperandSet] = useState<boolean>(false)
   const [shouldClearField, setShouldClearField] = useState<boolean>(false)
 
-  const inputDigit = (digit: number) => {
-    const parsedDigit = String(digit)
-    const newDisplayValue =
-      displayValue === '0' || shouldClearField ? parsedDigit : displayValue + parsedDigit
-    setDisplayValue(newDisplayValue)
+  const inputDigit = useCallback(
+    (digit: number) => {
+      const parsedDigit = String(digit)
+      const newDisplayValue =
+        displayValue === '0' || shouldClearField ? parsedDigit : displayValue + parsedDigit
+      setDisplayValue(newDisplayValue)
 
-    if (shouldClearField) {
-      setShouldClearField(false)
-    }
+      if (shouldClearField) {
+        setShouldClearField(false)
+      }
 
-    if (!firstOperandSet) {
-      setFirstOperand(Number(newDisplayValue))
-    } else {
-      setSecondOperand(Number(newDisplayValue))
-    }
-  }
+      if (!firstOperandSet) {
+        setFirstOperand(Number(newDisplayValue))
+      } else {
+        setSecondOperand(Number(newDisplayValue))
+      }
+    },
+    [displayValue, firstOperandSet, shouldClearField]
+  )
 
   const clearAll = () => {
     setDisplayValue('0')
@@ -37,24 +40,7 @@ export const App = () => {
     setFirstOperandSet(false)
   }
 
-  const performOperation = (nextOperator: '/' | '-' | '+' | '*') => {
-    setFirstOperandSet(true)
-    setOperator(nextOperator)
-    setShouldClearField(true)
-    setSecondOperand(null)
-    handleEqual()
-  }
-
-  const handleEqual = () => {
-    const newValue = calculate()
-
-    if (newValue !== null) {
-      setFirstOperand(newValue)
-      setDisplayValue(String(newValue))
-    }
-  }
-
-  const calculate = () => {
+  const calculate = useCallback(() => {
     if (firstOperand !== null && secondOperand !== null) {
       switch (operator) {
         case '+':
@@ -72,7 +58,27 @@ export const App = () => {
       console.log('One or both of operands are empty.')
       return null
     }
-  }
+  }, [firstOperand, operator, secondOperand])
+
+  const handleEqual = useCallback(() => {
+    const newValue = calculate()
+
+    if (newValue !== null) {
+      setFirstOperand(newValue)
+      setDisplayValue(String(newValue))
+    }
+  }, [calculate])
+
+  const performOperation = useCallback(
+    (nextOperator: '/' | '-' | '+' | '*') => {
+      setFirstOperandSet(true)
+      setOperator(nextOperator)
+      setShouldClearField(true)
+      setSecondOperand(null)
+      handleEqual()
+    },
+    [handleEqual]
+  )
 
   const toggleSign = () => {
     const newValue = parseFloat(displayValue) * -1
@@ -85,7 +91,7 @@ export const App = () => {
     }
   }
 
-  const inputDot = () => {
+  const inputDot = useCallback(() => {
     if (displayValue.indexOf('.') !== -1) {
       return
     } else {
@@ -98,7 +104,28 @@ export const App = () => {
         setSecondOperand(Number(newValue))
       }
     }
-  }
+  }, [displayValue, firstOperandSet])
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key >= '0' && e.key <= '9') {
+        inputDigit(Number(e.key))
+      } else if (e.key === '.' || e.key === ',') {
+        inputDot()
+      } else if (e.key === 'Enter' || e.key === '=') {
+        handleEqual()
+      } else if (e.key === 'Escape') {
+        clearAll()
+      } else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
+        performOperation(e.key)
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [displayValue, handleEqual, inputDigit, inputDot, operator, performOperation])
 
   return (
     <Box
