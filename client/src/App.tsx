@@ -195,18 +195,10 @@ export const App = () => {
 
       {showState && (
         <>
-          <Typography variant="body2" gutterBottom>
-            display value: {displayValue}
-          </Typography>
-          <Typography variant="body2" gutterBottom>
-            first operand: {firstOperand}
-          </Typography>
-          <Typography variant="body2" gutterBottom>
-            display value: {secondOperand}
-          </Typography>
-          <Typography variant="body2" gutterBottom>
-            display value: {displayValue}
-          </Typography>
+          <Typography variant="body2">display value: {displayValue}</Typography>
+          <Typography variant="body2">first operand: {firstOperand}</Typography>
+          <Typography variant="body2">second operand: {secondOperand}</Typography>
+          <Typography variant="body2">operator: {operator}</Typography>
         </>
       )}
     </Box>
