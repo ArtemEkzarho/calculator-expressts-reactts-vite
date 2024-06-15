@@ -1,6 +1,8 @@
 import { useState } from 'react'
-import { Box, TextField, Grid, Switch, FormControlLabel, Typography } from '@mui/material'
-import CalculatorButton from './CalculatorButton' // Make sure to import or define this component
+import { Box, TextField, Grid } from '@mui/material'
+
+import CalculatorButton from './CalculatorButton'
+import { BottomToolbar } from './BottomToolbar'
 
 export const App = () => {
   const [displayValue, setDisplayValue] = useState<string>('0')
@@ -9,8 +11,6 @@ export const App = () => {
   const [operator, setOperator] = useState<string | null>(null)
   const [firstOperandSet, setFirstOperandSet] = useState<boolean>(false)
   const [shouldClearField, setShouldClearField] = useState<boolean>(false)
-
-  const [showState, setShowState] = useState(false)
 
   const inputDigit = (digit: number) => {
     const parsedDigit = String(digit)
@@ -177,7 +177,7 @@ export const App = () => {
           <CalculatorButton label="+" onClick={() => performOperation('+')} color="secondary" />
         </Grid>
       </Grid>
-      <Grid container spacing={1}>
+      <Grid container spacing={1} mb={2}>
         <Grid item xs={6}>
           <CalculatorButton label="0" onClick={() => inputDigit(0)} />
         </Grid>
@@ -188,19 +188,12 @@ export const App = () => {
           <CalculatorButton label="=" onClick={handleEqual} color="secondary" />
         </Grid>
       </Grid>
-      <FormControlLabel
-        control={<Switch value={showState} onChange={(e, checked) => setShowState(checked)} />}
-        label="Show state"
+      <BottomToolbar
+        displayValue={displayValue}
+        firstOperand={firstOperand}
+        secondOperand={secondOperand}
+        operator={operator}
       />
-
-      {showState && (
-        <>
-          <Typography variant="body2">display value: {displayValue}</Typography>
-          <Typography variant="body2">first operand: {firstOperand}</Typography>
-          <Typography variant="body2">second operand: {secondOperand}</Typography>
-          <Typography variant="body2">operator: {operator}</Typography>
-        </>
-      )}
     </Box>
   )
 }
