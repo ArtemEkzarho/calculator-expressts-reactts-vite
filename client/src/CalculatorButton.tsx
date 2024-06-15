@@ -7,7 +7,7 @@ interface Props extends ButtonProps {
 
 export const CalculatorButton = ({ label, onClick, ...props }: Props) => {
   return (
-    <Button fullWidth variant="contained" onClick={onClick} {...props}>
+    <Button fullWidth variant="contained" onClick={onClick} {...props} size="large">
       {label}
     </Button>
   )
