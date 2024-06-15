@@ -18,7 +18,7 @@ export const BottomToolbar = ({ displayValue, firstOperand, secondOperand, opera
         <Grid item>
           <FormControlLabel
             control={
-              <Checkbox value={showState} onChange={(e, checked) => setShowState(checked)} />
+              <Checkbox value={showState} onChange={(_e, checked) => setShowState(checked)} />
             }
             label={<Typography variant="body2">Show state</Typography>}
           />
