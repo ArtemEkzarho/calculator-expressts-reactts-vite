@@ -11,6 +11,7 @@ export const App = () => {
   const [operator, setOperator] = useState<string | null>(null)
   const [firstOperandSet, setFirstOperandSet] = useState<boolean>(false)
   const [shouldClearField, setShouldClearField] = useState<boolean>(false)
+  const [equalPressed, setEqualPressed] = useState<boolean>(false)
 
   const inputDigit = useCallback(
     (digit: number) => {
@@ -62,6 +63,7 @@ export const App = () => {
 
   const handleEqual = useCallback(() => {
     const newValue = calculate()
+    setEqualPressed(true)
 
     if (newValue !== null) {
       setFirstOperand(newValue)
@@ -75,9 +77,12 @@ export const App = () => {
       setOperator(nextOperator)
       setShouldClearField(true)
       setSecondOperand(null)
-      handleEqual()
+      if (!equalPressed) {
+        handleEqual()
+      }
+      setEqualPressed(false)
     },
-    [handleEqual]
+    [equalPressed, handleEqual]
   )
 
   const toggleSign = () => {
@@ -114,7 +119,7 @@ export const App = () => {
         inputDot()
       } else if (e.key === 'Enter' || e.key === '=') {
         handleEqual()
-      } else if (e.key === 'Escape') {
+      } else if (e.key === 'Escape' || e.key === 'Backspace') {
         clearAll()
       } else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
         performOperation(e.key)
