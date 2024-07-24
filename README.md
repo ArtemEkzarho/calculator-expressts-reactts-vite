@@ -4,4 +4,4 @@
 - simple express server
 - deployed to adaptable
 
-https://demo-app-123.adaptable.app/
+https://calculator-1.adaptable.app
